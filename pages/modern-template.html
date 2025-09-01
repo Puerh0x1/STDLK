@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366f1">
+    <title>Страница - Личный Кабинет СТД РФ</title>
+    
+    <!-- Критические inline стили -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        :root {
+            --primary: #6366f1;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --border-color: #e2e8f0;
+        }
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --border-color: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Inter", -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            opacity: 0;
+        }
+        .init-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-primary);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .init-loader.hidden { opacity: 0; pointer-events: none; }
+        .init-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+    
+    <!-- Немедленная инициализация темы -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem("modern-theme") || "light";
+            document.documentElement.setAttribute("data-theme", theme);
+            const meta = document.querySelector("meta[name="theme-color"]");
+            if (meta) meta.content = theme === "dark" ? "#0f172a" : "#6366f1";
+        })();
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Modern Theme CSS -->
+    <link href="/STDLK/assets/css/modern-theme-fixed.css" rel="stylesheet">
+    
+    <style>
+        /* Дополнительные стили для внутренних страниц */
+        .page-header-modern {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius-xl);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .page-header-modern::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 50%;
+            height: 200%;
+            background: var(--gradient-primary);
+            opacity: 0.03;
+            transform: rotate(45deg);
+        }
+        
+        .page-title-modern {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0 0 0.5rem 0;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-subtitle-modern {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        .content-card-modern {
+            background: var(--bg-primary);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base) ease;
+        }
+        
+        .content-card-modern:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .section-title-modern {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 1rem;
+        }
+        
+        .section-title-modern::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 4px;
+            height: 70%;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            transform: translateY(-50%);
+        }
+        
+        .feature-grid-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-card-modern {
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all var(--transition-base) var(--ease-spring);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition-base) ease;
+        }
+        
+        .feature-card-modern:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card-modern:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon-modern {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title-modern {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-desc-modern {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .list-modern {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .list-item-modern {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all var(--transition-base) ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .list-item-modern:last-child {
+            border-bottom: none;
+        }
+        
+        .list-item-modern:hover {
+            background: var(--bg-secondary);
+            padding-left: 1.5rem;
+        }
+        
+        .badge-modern {
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.2));
+            color: var(--primary);
+            margin-right: 0.5rem;
+        }
+        
+        .badge-modern.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2));
+            color: var(--success);
+        }
+        
+        .badge-modern.warning {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2));
+            color: var(--warning);
+        }
+        
+        .badge-modern.danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2));
+            color: var(--danger);
+        }
+        
+        .progress-modern {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-bar-modern {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 10px;
+            transition: width var(--transition-slow) ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-bar-modern::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .tabs-modern {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0;
+        }
+        
+        .tab-modern {
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base) ease;
+            position: relative;
+        }
+        
+        .tab-modern::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transition: transform var(--transition-base) ease;
+        }
+        
+        .tab-modern:hover {
+            color: var(--primary);
+        }
+        
+        .tab-modern.active {
+            color: var(--primary);
+        }
+        
+        .tab-modern.active::after {
+            transform: scaleX(1);
+        }
+        
+        .empty-state-modern {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .empty-icon-modern {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 3rem;
+        }
+        
+        .empty-title-modern {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .empty-text-modern {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container-modern">
+        <!-- Modern Sidebar -->
+        <nav class="sidebar-modern">
+            <div class="sidebar-header-modern">
+                <h3><i class="fas fa-theater-masks"></i>СТД РФ</h3>
+                <p>Личный кабинет участника</p>
+            </div>
+            
+            <div class="nav-modern">
+                <div class="nav-modern-category">Основное</div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/index.html" class="nav-modern-link">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/profile.html" class="nav-modern-link">
+                        <i class="fas fa-user"></i>
+                        <span>Профиль</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/portfolio.html" class="nav-modern-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Портфолио</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Образование</div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/education.html" class="nav-modern-link">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Образование</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/courses.html" class="nav-modern-link">
+                        <i class="fas fa-book"></i>
+                        <span>Курсы</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Финансы</div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/payments.html" class="nav-modern-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Платежи</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/premium.html" class="nav-modern-link">
+                        <i class="fas fa-award"></i>
+                        <span>Премии</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Работа</div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/work.html" class="nav-modern-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Работа</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/projects.html" class="nav-modern-link">
+                        <i class="fas fa-folder"></i>
+                        <span>Проекты</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Поддержка</div>
+                <div class="nav-modern-item">
+                    <a href="/STDLK/pages/help.html" class="nav-modern-link">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Справка</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content-modern">
+            <!-- Page Header -->
+            <div class="page-header-modern">
+                <h1 class="page-title-modern">Заголовок Страницы</h1>
+                <p class="page-subtitle-modern">Описание страницы и её функциональности</p>
+            </div>
+
+            <!-- Content Example -->
+            <div class="content-card-modern">
+                <h2 class="section-title-modern">Секция с контентом</h2>
+                
+                <!-- Feature Grid Example -->
+                <div class="feature-grid-modern">
+                    <div class="feature-card-modern">
+                        <div class="feature-icon-modern">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="feature-title-modern">Функция 1</div>
+                        <div class="feature-desc-modern">
+                            Описание функциональности или возможности
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card-modern">
+                        <div class="feature-icon-modern">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="feature-title-modern">Функция 2</div>
+                        <div class="feature-desc-modern">
+                            Описание функциональности или возможности
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card-modern">
+                        <div class="feature-icon-modern">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="feature-title-modern">Функция 3</div>
+                        <div class="feature-desc-modern">
+                            Описание функциональности или возможности
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Example -->
+            <div class="content-card-modern">
+                <div class="tabs-modern">
+                    <button class="tab-modern active">Вкладка 1</button>
+                    <button class="tab-modern">Вкладка 2</button>
+                    <button class="tab-modern">Вкладка 3</button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Tab content here -->
+                    <p>Содержимое активной вкладки</p>
+                </div>
+            </div>
+
+            <!-- List Example -->
+            <div class="content-card-modern">
+                <h2 class="section-title-modern">Список элементов</h2>
+                
+                <ul class="list-modern">
+                    <li class="list-item-modern">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">Элемент списка 1</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">Описание элемента</div>
+                        </div>
+                        <span class="badge-modern success">Активно</span>
+                    </li>
+                    
+                    <li class="list-item-modern">
+                        <i class="fas fa-clock" style="color: var(--warning);"></i>
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600;">Элемент списка 2</div>
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">Описание элемента</div>
+                        </div>
+                        <span class="badge-modern warning">В процессе</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Progress Example -->
+            <div class="content-card-modern">
+                <h2 class="section-title-modern">Прогресс</h2>
+                
+                <div style="margin-bottom: 2rem;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                        <span style="font-weight: 600;">Общий прогресс</span>
+                        <span style="color: var(--primary);">75%</span>
+                    </div>
+                    <div class="progress-modern">
+                        <div class="progress-bar-modern" style="width: 75%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State Example -->
+            <div class="content-card-modern">
+                <div class="empty-state-modern">
+                    <div class="empty-icon-modern">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <div class="empty-title-modern">Пока ничего нет</div>
+                    <div class="empty-text-modern">
+                        Здесь появится контент, когда вы добавите новые элементы
+                    </div>
+                    <button class="btn-modern btn-modern-primary">
+                        <i class="fas fa-plus"></i>
+                        Добавить первый элемент
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modern Theme JS -->
+    <!-- Быстрая инициализация -->
+    <script>
+        (function() {
+            function showPage() {
+                document.documentElement.style.visibility = "visible";
+                document.documentElement.style.opacity = "1";
+                document.body.style.opacity = "1";
+                document.body.style.transition = "opacity 0.3s ease";
+                const loader = document.getElementById("initLoader");
+                if (loader) {
+                    loader.classList.add("hidden");
+                    setTimeout(() => loader.remove(), 300);
+                }
+            }
+            if (document.readyState === "complete") {
+                showPage();
+            } else {
+                window.addEventListener("load", showPage);
+                setTimeout(showPage, 1500);
+            }
+        })();
+    </script>
+    
+    <script src="../config.js"></script>
+    <script src="/STDLK/assets/js/smart-navigation.js"></script>
+    <script src="/STDLK/assets/js/instant-load.js" defer></script>
+    <script src="/STDLK/assets/js/modern-theme-improved.js" defer></script>
+    
+    <script>
+        // Пример работы с вкладками
+        document.querySelectorAll('.tab-modern').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.tab-modern').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+<script src="/STDLK/assets/js/navigation-helper.js"></script>
+</body>
+</html>
