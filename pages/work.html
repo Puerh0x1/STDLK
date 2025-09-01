@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366f1">
+    <title>Работа | СТД РФ</title>
+    
+    <!-- Критические inline стили -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        :root {
+            --primary: #6366f1;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --border-color: #e2e8f0;
+        }
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --border-color: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Inter", -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            opacity: 0;
+        }
+        .init-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-primary);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .init-loader.hidden { opacity: 0; pointer-events: none; }
+        .init-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+    
+    <!-- Немедленная инициализация темы -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem("modern-theme") || "light";
+            document.documentElement.setAttribute("data-theme", theme);
+            const meta = document.querySelector("meta[name="theme-color"]");
+            if (meta) meta.content = theme === "dark" ? "#0f172a" : "#6366f1";
+        })();
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Modern Theme CSS -->
+    <link href="../assets/css/modern-theme-fixed.css" rel="stylesheet">
+    
+    <style>
+        /* Специальные стили для страницы работы */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
+            gap: clamp(1rem, 3vw, 2rem);
+            padding: clamp(1rem, 3vw, 2rem);
+        }
+
+        .work-card {
+            background: var(--card-bg);
+            border-radius: clamp(12px, 2vw, 16px);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            container-type: inline-size;
+        }
+
+        .work-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .work-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .work-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .work-company {
+            color: var(--primary-color);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .work-date {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .work-content {
+            padding: 1.5rem;
+        }
+
+        .work-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .work-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .work-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-active { background: #dcfce7; color: #166534; }
+        .status-completed { background: #dbeafe; color: #1e40af; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            border-radius: 6px;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            background: transparent;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 575px) {
+            .work-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+                gap: 1rem;
+            }
+            
+            .work-card {
+                border-radius: 12px;
+            }
+            
+            .work-header,
+            .work-content {
+                padding: 1rem;
+            }
+            
+            .work-title {
+                font-size: 1.125rem;
+            }
+            
+            .work-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: stretch;
+            }
+            
+            .btn-sm {
+                width: 100%;
+                text-align: center;
+            }
+        }
+        
+        @media (min-width: 576px) and (max-width: 991px) {
+            .work-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (min-width: 1920px) {
+            .work-grid {
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+                gap: 2.5rem;
+            }
+            
+            .work-card {
+                border-radius: 20px;
+            }
+            
+            .work-header,
+            .work-content {
+                padding: 2rem;
+            }
+        }
+        
+        @media (min-width: 2560px) {
+            .work-grid {
+                max-width: 2400px;
+                margin: 0 auto;
+                grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            }
+        }
+        
+        /* Контейнерные запросы */
+        @container (max-width: 400px) {
+            .work-description {
+                font-size: 0.813rem;
+            }
+            
+            .work-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container-modern">
+        <!-- Modern Sidebar -->
+        <nav class="sidebar-modern">
+            <div class="sidebar-header-modern">
+                <h3><i class="fas fa-theater-masks"></i>СТД РФ</h3>
+                <p>Личный кабинет участника</p>
+            </div>
+            
+            <div class="nav-modern">
+                <div class="nav-modern-category">Основное</div>
+                <div class="nav-modern-item">
+                    <a href="../index.html" class="nav-modern-link">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="profile.html" class="nav-modern-link">
+                        <i class="fas fa-user"></i>
+                        <span>Профиль</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="portfolio.html" class="nav-modern-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Портфолио</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Образование</div>
+                <div class="nav-modern-item">
+                    <a href="education.html" class="nav-modern-link">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Образование</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="courses.html" class="nav-modern-link">
+                        <i class="fas fa-book"></i>
+                        <span>Курсы</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Финансы</div>
+                <div class="nav-modern-item">
+                    <a href="payments.html" class="nav-modern-link">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Платежи</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="premium.html" class="nav-modern-link">
+                        <i class="fas fa-award"></i>
+                        <span>Премии</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Работа</div>
+                <div class="nav-modern-item">
+                    <a href="work.html" class="nav-modern-link active">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Работа</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="projects.html" class="nav-modern-link">
+                        <i class="fas fa-folder"></i>
+                        <span>Проекты</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content-modern">
+            <!-- Modern Header -->
+            <header class="header-modern">
+                <div class="header-content">
+                    <div class="header-info">
+                        <h1>Моя работа</h1>
+                        <p>Управляйте рабочими проектами и контрактами</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="user-info-modern">
+                            <div class="user-avatar-modern">ИП</div>
+                            <div class="user-details-modern">
+                                <h5>Иван Петров</h5>
+                                <p>Билет №12345</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Work Grid -->
+            <div class="work-grid fade-in-up">
+                <div class="work-card">
+                    <div class="work-header">
+                        <div class="work-title">Главная роль в спектакле "Гамлет"</div>
+                        <div class="work-company">Московский художественный театр</div>
+                        <div class="work-date">2024 - настоящее время</div>
+                    </div>
+                    <div class="work-content">
+                        <div class="work-description">
+                            Исполнение главной роли в классической постановке шекспировской трагедии. Работа с режиссером и ансамблем актеров.
+                        </div>
+                        <div class="work-actions">
+                            <span class="work-status status-active">Активно</span>
+                            <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-header">
+                        <div class="work-title">Роль в фильме "Летний дождь"</div>
+                        <div class="work-company">Кинокомпания "Современное кино"</div>
+                        <div class="work-date">2023</div>
+                    </div>
+                    <div class="work-content">
+                        <div class="work-description">
+                            Исполнение роли Андрея в драматическом фильме о любви и потерях в современной Москве.
+                        </div>
+                        <div class="work-actions">
+                            <span class="work-status status-completed">Завершено</span>
+                            <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-header">
+                        <div class="work-title">Участие в телесериале "Городские истории"</div>
+                        <div class="work-company">Телеканал "Культура"</div>
+                        <div class="work-date">2022</div>
+                    </div>
+                    <div class="work-content">
+                        <div class="work-description">
+                            Роль Дмитрия в многосерийном драматическом сериале о жизни современного города.
+                        </div>
+                        <div class="work-actions">
+                            <span class="work-status status-completed">Завершено</span>
+                            <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-header">
+                        <div class="work-title">Роль Лопахина в "Вишневом саде"</div>
+                        <div class="work-company">Театр им. Вахтангова</div>
+                        <div class="work-date">2021</div>
+                    </div>
+                    <div class="work-content">
+                        <div class="work-description">
+                            Современная интерпретация классической пьесы А.П. Чехова в постановке известного режиссера.
+                        </div>
+                        <div class="work-actions">
+                            <span class="work-status status-completed">Завершено</span>
+                            <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-header">
+                        <div class="work-title">Главная роль в короткометражном фильме</div>
+                        <div class="work-company">Киностудия "Эксперимент"</div>
+                        <div class="work-date">2020</div>
+                    </div>
+                    <div class="work-content">
+                        <div class="work-description">
+                            Экспериментальный короткометражный фильм "Новый день" о надежде и переменах в жизни человека.
+                        </div>
+                        <div class="work-actions">
+                            <span class="work-status status-completed">Завершено</span>
+                            <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="work-card">
+                    <div class="work-header">
+                        <div class="work-title">Рекламный ролик для крупной компании</div>
+                        <div class="work-company">Рекламное агентство "Креатив"</div>
+                        <div class="work-date">2019</div>
+                    </div>
+                    <div class="work-content">
+                        <div class="work-description">
+                            Рекламный ролик для крупной компании в сфере услуг. Работа с профессиональной съемочной группой.
+                        </div>
+                        <div class="work-actions">
+                            <span class="work-status status-completed">Завершено</span>
+                            <button class="btn btn-outline-primary btn-sm">Подробнее</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modern Theme JS -->
+    <script src="../assets/js/page-transitions.js"></script>
+    <!-- Быстрая инициализация -->
+    <script>
+        (function() {
+            function showPage() {
+                document.documentElement.style.visibility = "visible";
+                document.documentElement.style.opacity = "1";
+                document.body.style.opacity = "1";
+                document.body.style.transition = "opacity 0.3s ease";
+                const loader = document.getElementById("initLoader");
+                if (loader) {
+                    loader.classList.add("hidden");
+                    setTimeout(() => loader.remove(), 300);
+                }
+            }
+            if (document.readyState === "complete") {
+                showPage();
+            } else {
+                window.addEventListener("load", showPage);
+                setTimeout(showPage, 1500);
+            }
+        })();
+    </script>
+    
+    <script src="../assets/js/instant-load.js" defer></script>
+    <script src="../assets/js/page-transitions.js" defer></script>
+    <script src="../assets/js/modern-theme-improved.js" defer></script>
+    
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add loading animation
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+
+        // Add hover effects to cards
+        document.querySelectorAll('.work-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add active state to navigation
+        document.querySelectorAll('.nav-modern-link').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.nav-modern-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html> 
+
+

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#6366f1">
+    <title>Платежи | СТД РФ</title>
+    
+    <!-- Критические inline стили -->
+    <style>
+        html { visibility: hidden; opacity: 0; }
+        :root {
+            --primary: #6366f1;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --text-primary: #0f172a;
+            --border-color: #e2e8f0;
+        }
+        [data-theme="dark"] {
+            --primary: #818cf8;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --text-primary: #f1f5f9;
+            --border-color: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: "Inter", -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            opacity: 0;
+        }
+        .init-loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-primary);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .init-loader.hidden { opacity: 0; pointer-events: none; }
+        .init-spinner {
+            width: 40px; height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+    
+    <!-- Немедленная инициализация темы -->
+    <script>
+        (function() {
+            const theme = localStorage.getItem("modern-theme") || "light";
+            document.documentElement.setAttribute("data-theme", theme);
+            const meta = document.querySelector("meta[name="theme-color"]");
+            if (meta) meta.content = theme === "dark" ? "#0f172a" : "#6366f1";
+        })();
+    </script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Modern Theme CSS -->
+    <link href="../assets/css/modern-theme-fixed.css" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container-modern">
+        <!-- Modern Sidebar -->
+        <nav class="sidebar-modern">
+            <div class="sidebar-header-modern">
+                <h3><i class="fas fa-theater-masks"></i>СТД РФ</h3>
+                <p>Личный кабинет участника</p>
+            </div>
+            
+            <div class="nav-modern">
+                <div class="nav-modern-category">Основное</div>
+                <div class="nav-modern-item">
+                    <a href="../index.html" class="nav-modern-link">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="profile.html" class="nav-modern-link">
+                        <i class="fas fa-user"></i>
+                        <span>Профиль</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="portfolio.html" class="nav-modern-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Портфолио</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Образование</div>
+                <div class="nav-modern-item">
+                    <a href="education.html" class="nav-modern-link">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>Образование</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="courses.html" class="nav-modern-link">
+                        <i class="fas fa-book"></i>
+                        <span>Курсы</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Финансы</div>
+                <div class="nav-modern-item">
+                    <a href="payments.html" class="nav-modern-link active">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Платежи</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="premium.html" class="nav-modern-link">
+                        <i class="fas fa-award"></i>
+                        <span>Премии</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Работа</div>
+                <div class="nav-modern-item">
+                    <a href="work.html" class="nav-modern-link">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Работа</span>
+                    </a>
+                </div>
+                <div class="nav-modern-item">
+                    <a href="projects.html" class="nav-modern-link">
+                        <i class="fas fa-folder"></i>
+                        <span>Проекты</span>
+                    </a>
+                </div>
+                
+                <div class="nav-modern-category">Поддержка</div>
+                <div class="nav-modern-item">
+                    <a href="help.html" class="nav-modern-link">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Справка</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content-modern">
+            <!-- Modern Header -->
+            <header class="header-modern">
+                <div class="header-content">
+                    <div class="header-info">
+                        <h1>Финансовые операции</h1>
+                        <p>Управляйте платежами и отслеживайте баланс</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="user-info-modern">
+                            <div class="user-avatar-modern">ИП</div>
+                            <div class="user-details-modern">
+                                <h5>Иван Петров</h5>
+                                <p>Билет №12345</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Financial Stats -->
+            <div class="stats-grid-modern">
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern success">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="stat-value-modern">₽15,000</div>
+                    <div class="stat-label-modern">Текущий баланс</div>
+                    <div class="stat-change positive">+₽5,000 за месяц</div>
+                </div>
+                
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern primary">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="stat-value-modern">₽45,000</div>
+                    <div class="stat-label-modern">Поступления</div>
+                    <div class="stat-change">За 2025 год</div>
+                </div>
+                
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern warning">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div class="stat-value-modern">₽30,000</div>
+                    <div class="stat-label-modern">Расходы</div>
+                    <div class="stat-change">За 2025 год</div>
+                </div>
+                
+                <div class="stat-card-modern">
+                    <div class="stat-icon-modern info">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-value-modern">₽5,000</div>
+                    <div class="stat-label-modern">Следующий платеж</div>
+                    <div class="stat-change">Через 15 дней</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section-modern">
+                <div class="section-header-modern">
+                    <h3>Быстрые действия</h3>
+                </div>
+                
+                <div class="quick-actions-modern">
+                    <button class="action-card-modern">
+                        <div class="action-icon-modern">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="action-title-modern">Пополнить счет</div>
+                        <div class="action-desc-modern">Добавить средства</div>
+                    </button>
+                    
+                    <button class="action-card-modern">
+                        <div class="action-icon-modern">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="action-title-modern">Перевести</div>
+                        <div class="action-desc-modern">Между счетами</div>
+                    </button>
+                    
+                    <button class="action-card-modern">
+                        <div class="action-icon-modern">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="action-title-modern">Выписка</div>
+                        <div class="action-desc-modern">Скачать отчет</div>
+                    </button>
+                    
+                    <button class="action-card-modern">
+                        <div class="action-icon-modern">
+                            <i class="fas fa-hand-holding-usd"></i>
+                        </div>
+                        <div class="action-title-modern">Оплатить взнос</div>
+                        <div class="action-desc-modern">Членский взнос СТД</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="section-modern">
+                <div class="section-header-modern">
+                    <h3>История операций</h3>
+                    <button class="btn-modern btn-modern-secondary">Все операции</button>
+                </div>
+                
+                <div class="transaction-list-modern">
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon success">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <h4>Членский взнос за 2025 год</h4>
+                            <p>29 августа 2025, 14:30</p>
+                        </div>
+                        <div class="transaction-amount positive">
+                            +₽5,000
+                        </div>
+                        <span class="transaction-status success">Успешно</span>
+                    </div>
+                    
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon danger">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <h4>Оплата курса "Актерское мастерство"</h4>
+                            <p>15 августа 2025, 10:15</p>
+                        </div>
+                        <div class="transaction-amount negative">
+                            -₽15,000
+                        </div>
+                        <span class="transaction-status success">Успешно</span>
+                    </div>
+                    
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon success">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <h4>Пополнение счета</h4>
+                            <p>1 августа 2025, 09:00</p>
+                        </div>
+                        <div class="transaction-amount positive">
+                            +₽20,000
+                        </div>
+                        <span class="transaction-status success">Успешно</span>
+                    </div>
+                    
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon danger">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <h4>Оплата курса "Вокал для актеров"</h4>
+                            <p>15 июля 2025, 16:45</p>
+                        </div>
+                        <div class="transaction-amount negative">
+                            -₽8,000
+                        </div>
+                        <span class="transaction-status success">Успешно</span>
+                    </div>
+                    
+                    <div class="transaction-item-modern">
+                        <div class="transaction-icon warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="transaction-info">
+                            <h4>Возврат за отмененный курс</h4>
+                            <p>10 июля 2025, 12:00</p>
+                        </div>
+                        <div class="transaction-amount positive">
+                            +₽3,000
+                        </div>
+                        <span class="transaction-status pending">В обработке</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="section-modern">
+                <div class="section-header-modern">
+                    <h3>Способы оплаты</h3>
+                    <button class="btn-modern btn-modern-primary">
+                        <i class="fas fa-plus"></i> Добавить карту
+                    </button>
+                </div>
+                
+                <div class="payment-methods-grid">
+                    <div class="payment-method-card">
+                        <div class="card-type">
+                            <i class="fab fa-cc-visa"></i> Visa
+                        </div>
+                        <div class="card-number">•••• •••• •••• 4242</div>
+                        <div class="card-holder">Иван Петров</div>
+                        <div class="card-actions">
+                            <button class="btn-modern btn-modern-outline">Изменить</button>
+                            <button class="btn-modern btn-modern-outline">Удалить</button>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method-card">
+                        <div class="card-type">
+                            <i class="fab fa-cc-mastercard"></i> Mastercard
+                        </div>
+                        <div class="card-number">•••• •••• •••• 5555</div>
+                        <div class="card-holder">Иван Петров</div>
+                        <div class="card-actions">
+                            <button class="btn-modern btn-modern-outline">Изменить</button>
+                            <button class="btn-modern btn-modern-outline">Удалить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modern Theme JS -->
+    <script src="../assets/js/page-transitions.js"></script>
+    <!-- Быстрая инициализация -->
+    <script>
+        (function() {
+            function showPage() {
+                document.documentElement.style.visibility = "visible";
+                document.documentElement.style.opacity = "1";
+                document.body.style.opacity = "1";
+                document.body.style.transition = "opacity 0.3s ease";
+                const loader = document.getElementById("initLoader");
+                if (loader) {
+                    loader.classList.add("hidden");
+                    setTimeout(() => loader.remove(), 300);
+                }
+            }
+            if (document.readyState === "complete") {
+                showPage();
+            } else {
+                window.addEventListener("load", showPage);
+                setTimeout(showPage, 1500);
+            }
+        })();
+    </script>
+    
+    <script src="../assets/js/instant-load.js" defer></script>
+    <script src="../assets/js/page-transitions.js" defer></script>
+    <script src="../assets/js/modern-theme-improved.js" defer></script>
+    
+    <style>
+        .transaction-list-modern {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .transaction-item-modern {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--bg-glass);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .transaction-item-modern:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.1);
+        }
+        
+        .transaction-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .transaction-icon.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .transaction-icon.danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .transaction-icon.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .transaction-info {
+            flex: 1;
+        }
+        
+        .transaction-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .transaction-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .transaction-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .transaction-amount.positive {
+            color: #10b981;
+        }
+        
+        .transaction-amount.negative {
+            color: #ef4444;
+        }
+        
+        .transaction-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .transaction-status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .transaction-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .payment-method-card {
+            background: var(--bg-glass);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .payment-method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+        
+        .card-type {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .card-number {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .card-holder {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .stat-change.positive {
+            color: #10b981;
+        }
+        
+        @media (max-width: 768px) {
+            .transaction-item-modern {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .payment-methods-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
